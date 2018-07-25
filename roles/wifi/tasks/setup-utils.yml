@@ -1,0 +1,10 @@
+---
+
+- name: "Install vim package user is present"
+  package:
+      name:   "{{ package_name }}"
+      state:  latest
+  loop_control:
+    loop_var: package_name
+  with_items:
+    - "{{ wifi__utils }}"

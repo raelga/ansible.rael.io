@@ -1,0 +1,3 @@
+wifi__utils:
+  - iw
+  - "{{ wifi__utils_distpkgs }}"
