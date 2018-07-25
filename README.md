@@ -2,7 +2,20 @@
 
 Ansible playbooks and roles for my computers.
 
-## Home
+## Usage
+
+Makefile targets:
+
+```make
+usage:           Show this help
+roles:           Install ansible external roles
+check: roles     Check playbooks for all hosts
+check-%: roles   Check playbooks for specific hosts: make check-eva.rael.io
+run: roles       Run playvooks for all nodes
+run-%: roles     Run playbooks for specific hosts: make run-lain.rael.io
+```
+
+## Hosts
 
 ### Lain
 _lain.rael.io_
