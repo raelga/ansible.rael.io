@@ -1,0 +1,6 @@
+- hosts: lain.rael.io
+  become: true
+  roles:
+    - common
+    - wifi
+    - geerlingguy.docker1

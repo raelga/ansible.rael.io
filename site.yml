@@ -10,3 +10,5 @@
     changed_when: output.stdout != ""
   - name: Gathering Facts
     setup:
+
+- import_playbook: playbooks/home.yml
