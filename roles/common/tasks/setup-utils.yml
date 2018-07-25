@@ -1,0 +1,10 @@
+---
+
+- name: "base utils are present and updated"
+  package:
+      name:   "{{ package_name }}"
+      state:  latest
+  loop_control:
+    loop_var: package_name
+  with_items:
+    - "{{ common__utils }}"

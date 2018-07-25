@@ -1,0 +1,4 @@
+common__utils:
+  - make
+  - lm-sensors
+  - "{{ common__utils_distpkgs }}"

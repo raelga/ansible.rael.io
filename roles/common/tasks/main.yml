@@ -1,0 +1,21 @@
+---
+
+- name: gather distribution specific variables
+  include_vars: "{{ dist_vars }}"
+  with_first_found:
+    - files:
+      - "{{ ansible_distribution }}-{{ ansible_distribution_major_version}}.yml"
+      - "{{ ansible_distribution }}.yml"
+      skip: true
+  loop_control:
+    loop_var: dist_vars
+  tags: vars
+
+- name: "setup {{ common__username }} user"
+  include_tasks: setup-user.yml
+
+- name: "setup base utils"
+  include_tasks: setup-utils.yml
+
+- name: "setup VIM editor"
+  include_tasks: setup-vim.yml

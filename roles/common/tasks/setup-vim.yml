@@ -1,0 +1,10 @@
+---
+
+- name: "vim packages utils are present and updated"
+  package:
+      state: latest
+      name: "{{ package_name }}"
+  loop_control:
+    loop_var: package_name
+  with_items:
+    - vim
