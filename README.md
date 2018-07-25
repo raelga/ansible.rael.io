@@ -4,22 +4,27 @@ Ansible playbooks and roles for my computers.
 
 ## Home
 
-### Lain - lain.rael.io
+### Lain
+_lain.rael.io_
 
 Home server for network related stuff.
 
-### Eva - eva.rael.io
+### Eva
+_eva.rael.io_
 
 Home file server for backups and media.
 
-### Aloy - aloy.rael.io
+### Aloy
+_aloy.rael.io_
 
 Music and video workstation.
 
 ### Alyx
+_alyx.rael.io_
 
 Gaming workstation.
 
-### Ellie - ellie.rael.io
+### Ellie
+_ellie.rael.io_
 
 Personal computer and main driver.
