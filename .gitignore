@@ -1,3 +1,4 @@
 galaxy_roles/*
 ansible_collections/*
 *.retry
+.vscode/*log
