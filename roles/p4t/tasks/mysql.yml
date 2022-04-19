@@ -1,0 +1,23 @@
+- name: "base utils are present and updated"
+  package:
+    name: "{{ package_name }}"
+    state: latest
+  loop_control:
+    loop_var: package_name
+  with_items:
+    - mysql-server
+    - mysql-client
+    - python3-pymysql
+
+- name: Ensure mysql service is running
+  systemd:
+    name: mysql
+    state: started
+    enabled: yes
+
+- name: Set max_allowed_packet variable to 1 persistently
+  lineinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
+    regexp: "^max_allowed_packet(.*)=.*$"
+    line: 'max_allowed_packet\1= 128M'
+    backrefs: yes

@@ -1,0 +1,105 @@
+---
+# - name: Add an packages.sury.org/php repository key
+#   ansible.builtin.apt_key:
+#     url: https://packages.sury.org/php/apt.gpg
+#     state: present
+
+# - name: Add an packages.sury.org/php repository
+#   ansible.builtin.apt_repository:
+#     repo: deb https://packages.sury.org/php/ stretch main
+#     state: present
+
+- name: "base utils are present and updated"
+  package:
+    name: "{{ package_name }}"
+    state: latest
+  loop_control:
+    loop_var: package_name
+  with_items:
+    - apache2
+    - certbot
+    - python3-certbot-apache
+    - ca-certificates
+    - apt-transport-https
+    # - php5.6
+    # - php5.6-cli
+    # - php5.6-common
+    # - php5.6-curl
+    # - php5.6-mbstring
+    # - php5.6-mysql
+    # - php5.6-xml
+    # - php5.6-fpm
+
+- name: Add cron job for certbot renewal (if configured).
+  ansible.builtin.cron:
+    name: Certbot automatic renewal.
+    job: "cerbot renew -quiet --no-self-upgrade"
+    special_time: weekly
+
+- name: "Enable the Apache2 module {{ module_name }}"
+  community.general.apache2_module:
+    state: present
+    name: "{{ module_name }}"
+  loop_control:
+    loop_var: module_name
+  with_items:
+    - proxy
+    - proxy_fcgi
+    - rewrite
+    - expires
+    - ssl
+  notify:
+    - Restart apache2 service
+
+- name: Copy p4t vhosts with owner and permissions
+  ansible.builtin.copy:
+    src: "sites/{{ vhost_file }}"
+    dest: "/etc/apache2/sites-available/{{ vhost_file }}"
+    owner: root
+    group: root
+    mode: "0644"
+  loop_control:
+    loop_var: vhost_file
+  with_items:
+    - 010-play4trophies.com.conf
+    - 011-trofeos.play4trophies.com.conf
+
+- name: Enable p4t vhosts
+  ansible.builtin.file:
+    src: "/etc/apache2/sites-available/{{ vhost_file }}"
+    dest: "/etc/apache2/sites-enabled/{{ vhost_file }}"
+    state: link
+  loop_control:
+    loop_var: vhost_file
+  with_items:
+    - 010-play4trophies.com.conf
+    - 011-trofeos.play4trophies.com.conf
+  notify:
+    - Reload apache2 service
+
+- name: Disable default vhosts
+  ansible.builtin.file:
+    dest: /etc/apache2/sites-enabled/000-default.conf
+    state: absent
+  notify:
+    - Reload apache2 service
+
+# - name: Copy php fpm www.conf
+#   ansible.builtin.copy:
+#     src: "php/www.conf"
+#     dest: "/etc/php/5.6/fpm/pool.d/www.conf"
+#     owner: root
+#     group: root
+#     mode: "0644"
+#   notify:
+#     - Restart php5.6-fpm service
+
+- name: Copy apache2.conf
+  ansible.builtin.copy:
+    src: "apache2.conf"
+    dest: "/etc/apache2/apache2.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart apache2 service

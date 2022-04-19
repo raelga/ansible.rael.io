@@ -4,11 +4,28 @@
   gather_facts: false
 
   pre_tasks:
-  - name: Install python2 for Ansible
-    raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python-minimal)"
-    register: output
-    changed_when: output.stdout != ""
-  - name: Gathering Facts
-    setup:
+    - name: Install python for Ansible
+      raw: bash -c "test -e /usr/bin/python || (apt -qqy update && apt install -qqy python3-minimal)"
+      register: output
+      changed_when: output.stdout != ""
+    - name: Gathering Facts
+      setup:
 
-- import_playbook: playbooks/home.yml
+- hosts: lain.rael.io
+  become: true
+  roles:
+    - common
+    - wifi
+    - geerlingguy.docker
+
+- hosts: do.play4trophies.com
+  become: true
+  roles:
+    - common
+    - p4t
+    - geerlingguy.docker
+  collections:
+    - community.mysql
+    - community.general
+  vars:
+    database_dumps_timestamp: "20220409"

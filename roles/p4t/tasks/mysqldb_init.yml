@@ -1,0 +1,19 @@
+---
+- name: Database exists
+  shell: >
+    mysql -B -N -e 'SHOW DATABASES;' | egrep -q "^{{ database_name }}$"
+  register: database_exists
+  failed_when: database_exists.rc == 1
+  ignore_errors: true
+
+- name: Restore {{ database_name }} database
+  community.mysql.mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ database_name }}"
+    state: import
+    force: yes
+    target: "/mnt/p4td/backup/databases/{{ database_dumps_timestamp }}.{{ database_name }}.sql.gz"
+  when:
+    - database_dumps_timestamp
+    - database_name
+    - database_exists.failed

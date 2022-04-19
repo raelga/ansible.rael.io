@@ -1,0 +1,26 @@
+- name: Install mysql server and tools
+  include_tasks:
+    file: mysql.yml
+    apply:
+      tags: [mysql]
+  tags: [mysql]
+
+- name: Populate databases if missing
+  include_tasks:
+    file: mysqldb_init.yml
+    apply:
+      tags: [mysql]
+  loop_control:
+    loop_var: database_name
+  with_items:
+    - vb_play4trophies
+    - p4t_psn
+    - p4t_psn_dev
+  tags: [mysql]
+
+- name: Install web server and tools
+  include_tasks:
+    file: web.yml
+    apply:
+      tags: [web]
+  tags: [web]

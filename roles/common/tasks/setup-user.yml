@@ -1,14 +1,17 @@
 ---
+- name: "{{ common__username }} user is present"
+  group:
+    name: "{{ common__username }}"
 
 - name: "{{ common__username }} user is present"
   user:
     name: "{{ common__username }}"
     comment: "{{ common__username }} user"
     group: "{{ common__username }}"
-    shell: '/bin/bash'
+    shell: "/bin/bash"
     generate_ssh_key: yes
-    ssh_key_bits: '2048'
-    ssh_key_file: '.ssh/id_rsa'
+    ssh_key_bits: "2048"
+    ssh_key_file: ".ssh/id_rsa"
 
 - name: "{{ common__username }} user is able to execute passwordless sudo"
   copy:
@@ -16,7 +19,7 @@
     content: "{{ common__username }} ALL=(ALL) NOPASSWD:ALL"
     owner: root
     group: root
-    mode: 0440   
+    mode: 0440
     validate: "/usr/sbin/visudo -cf %s"
 
 - name: "{{ common__username }} authorized_key contains the git public keys"
